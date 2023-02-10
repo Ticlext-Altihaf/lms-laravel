@@ -18,7 +18,9 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.5.10",
-        "spatie/laravel-ignition": "^1.0"
+        "spatie/laravel-ignition": "^1.0",
+        "tanmuhittin/laravel-google-translate": "^2.1"
+
     },
     "autoload": {
         "psr-4": {

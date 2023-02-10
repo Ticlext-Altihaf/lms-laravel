@@ -13,12 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
+
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('image')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('is_admin')->default(false);
+            $table->boolean('is_teacher')->default(false);
+            $table->boolean('is_student')->default(false);
+            $table->boolean('is_disabled')->default(false);//true if teacher and not approved
             $table->rememberToken();
             $table->timestamps();
         });

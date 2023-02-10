@@ -41,4 +41,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function authoredLesson(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Lessons::class);
+    }
+
+
 }

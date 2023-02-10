@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Courses;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,11 +15,35 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $admin_user = \App\Models\User::create([
+            'name' => 'Admin',
+            'email' => 'admin@locahost',
+            'password' => bcrypt('password'),
+            'is_admin' => true,
+        ]);
+        $courses = array();
+        for ($i = 0; $i < 10; $i++) {
+            $courses[] = Courses::create([
+                'title' => 'Course ' . $i,
+                'description' => 'Description ' . $i,
+                'author_id' => $admin_user->id,
+                'image' => 'https://picsum.photos/200/300',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+        $categories = array();
+        for ($i = 0; $i < 10; $i++) {
+            $categories[] = \App\Models\Categories::create([
+                'name' => 'Category ' . $i,
+                'description' => 'Description ' . $i,
+                'image' => 'https://picsum.photos/200/300',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+
+
     }
 }

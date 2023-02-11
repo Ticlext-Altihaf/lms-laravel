@@ -23,7 +23,7 @@ class Choice extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-
+        'is_correct',
     ];
 
     /**

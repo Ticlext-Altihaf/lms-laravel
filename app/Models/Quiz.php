@@ -23,7 +23,7 @@ class Quiz extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-
+        'answer'
     ];
 
     /**

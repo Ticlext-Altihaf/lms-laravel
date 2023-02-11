@@ -22,9 +22,9 @@ class CoursesController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Courses::all();
+        $data = Courses::with(['author', 'categories'])->get();
         if($request->expectsJson()) {
-            return response()->json(['message' => __("controller.success.get"), 'data' => $data]);
+            return response()->json(['message' => __("controller.success.get", ["data" => trans_choice("data.courses", count($data))]), 'data' => $data]);
         }
         return view('courses.index', compact('data'));
     }
@@ -102,10 +102,25 @@ class CoursesController extends Controller
      * @param  \App\Models\Courses  $courses
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Courses $courses)
+    public function show(Request $request, Courses $course)
     {
+        $data = $course->load(['author', 'categories', 'lessons'])->loadCount(['lessons']);
+        $lessons = $data->lessons;
+        $sections = array();
+        $lessons_sectioned = array();
+        foreach ($lessons as $lesson){
+            if(!in_array($lesson->section, $sections)) {
+                array_push($sections, $lesson->section);
+            }
+            if(!array_key_exists($lesson->section, $lessons_sectioned)) {
+                $lessons_sectioned[$lesson->section] = array();
+            }
+            array_push($lessons_sectioned[$lesson->section], $lesson);
+        }
+        $data->sections = $sections;
+        $data->lessons_sectioned = $lessons_sectioned;
         if($request->expectsJson()) {
-            return response()->json(['message' => __("controller.success.get"), 'data' => $data]);
+            return response()->json(['message' => __("controller.success.get", ['data' => trans_choice("data.courses", 1)]), 'data' => $data]);
         }
         return view("courses.show", compact('data'));
     }

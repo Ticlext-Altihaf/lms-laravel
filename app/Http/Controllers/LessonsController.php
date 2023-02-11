@@ -118,10 +118,12 @@ class LessonsController extends Controller
      * @param  \App\Models\Lessons  $lessons
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Lessons $lessons)
+    public function show(Lessons $lesson, Request $request)
     {
+        $lesson = $lesson->load('course', 'quizzes', 'chat_room', 'quizzes.choices')->loadCount('quizzes');
+
         if($request->expectsJson()) {
-            return response()->json(['message' => __("controller.success.get"), 'data' => $lessons]);
+            return response()->json(['message' => __("controller.success.get", ['data' => trans_choice("data.lessons", 1)]), 'data' => $lesson]);
         }
         return view('lessons.show', compact('lessons'));
     }

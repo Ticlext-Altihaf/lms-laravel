@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $users = array();
+        $faker = fake("id");
         /**
          *
          * create table users
@@ -41,10 +42,10 @@ class DatabaseSeeder extends Seeder
         $seed = Str::random(10);
         for ($i = 0; $i < 10; $i++) {
             $users[] = \App\Models\User::create([
-                'name' => fake()->name,
-                'email' => fake()->email,
+                'name' => $faker->name,
+                'email' => $faker->email,
                 'password' => Hash::make('password' . $i),
-                'image' => 'https://picsum.photos/200/300',
+                'image' => "https://loremflickr.com/500/500/face?lock=".Str::random(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -67,17 +68,17 @@ class DatabaseSeeder extends Seeder
              * )
              * collate = utf8mb4_unicode_ci;
              */
-            $author = $users[fake()->numberBetween(0, 9)];
+            $author = $users[$faker->numberBetween(0, 9)];
             //check is_teacher
             if (!$author->is_teacher) {
                 $author->is_teacher = true;
                 $author->save();
             }
             $courses[] = Courses::create([
-                'name' => 'Course ' . fake()->title . fake()->name,
-                'description' => fake()->text,
+                'name' => 'Course ' . $faker->title . $faker->name,
+                'description' => $faker->text,
                 'author_id' => $author->id,
-                'image' => 'https://picsum.photos/200/300',
+                'image' => "https://loremflickr.com/500/500/education?lock=".Str::random(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -99,9 +100,9 @@ class DatabaseSeeder extends Seeder
              * collate = utf8mb4_unicode_ci;
              */
             $categories[] = \App\Models\Categories::create([
-                'name' => fake()->jobTitle,
+                'name' => $faker->jobTitle,
                 'description' => 'Description ' . $i,
-                'image' => 'https://picsum.photos/200/300',
+                'image' => "https://loremflickr.com/500/500/job?lock=".Str::random(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -142,7 +143,7 @@ class DatabaseSeeder extends Seeder
                     'name' => 'Lesson ' . $i,
                     'description' => 'Description ' . $i,
                     'video_url' => rand(0, 1) ? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' : null,
-                    'attachment_path' => rand(0, 1) ? 'https://picsum.photos/200/300' : null,
+                    'attachment_path' => rand(0, 1) ? 'https://loremflickr.com/500/500/job?lock='.Str::random() : null,
                     'section' => $i > 2 ? 2 : 1,
                     'course_id' => $course->id,
                     'created_at' => now(),
@@ -208,8 +209,8 @@ class DatabaseSeeder extends Seeder
                         $parent_message_id = $messages[rand(0, count($messages) - 1)]->id;
                     }
                     $messages[] = \App\Models\Message::create([
-                        'text' => fake()->text(100),
-                        'attachment_path' => rand(0, 1) ? 'https://picsum.photos/200/300' : null,
+                        'text' => $faker->text(100),
+                        'attachment_path' => rand(0, 1) ? 'https://loremflickr.com/500/500/job?lock='.Str::random() : null,
                         'user_id' => $users[rand(0, count($users) - 1)]->id,
                         'chat_room_id' => $chat_room->id,
                         'message_id' => $parent_message_id,
@@ -239,7 +240,7 @@ class DatabaseSeeder extends Seeder
                         $type = rand(0, 2);
                         $quiz = $lesson->quizzes()->create([
                             'name' => 'Quiz ' . $j,
-                            'question' => fake()->text(100),
+                            'question' => $faker->text(100),
                             'is_multiple_choice' => $type == 0,
                             'is_true_false' => $type == 1,
                             'is_fill_in_the_blank' => $type == 2,
@@ -266,7 +267,7 @@ class DatabaseSeeder extends Seeder
                              */
                             for ($k = 0; $k < $number_of_choices; $k++) {
                                 $quiz->choices()->create([
-                                    'text' => fake()->text(20),
+                                    'text' => $faker->text(20),
                                     'is_correct' => rand(0, 10) > 7,
                                     'quiz_id' => $quiz->id,
                                     'created_at' => now(),

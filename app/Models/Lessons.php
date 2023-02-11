@@ -42,4 +42,9 @@ class Lessons extends Model
     {
         return $this->hasMany(Quiz::class, 'lesson_id');
     }
+
+    public function chat_room(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(ChatRoom::class, 'chat_room_id');
+    }
 }

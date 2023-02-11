@@ -8,7 +8,9 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -26,9 +28,10 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         $request->authenticate();
-        if($request->expectsJson()) {
-            $token = $request->user()->createToken('auth_token')->plainTextToken;
-            return response()->json(['message' => __("controller.success.login"), 'token' => $token], 200);
+        if($request->expectsJson()&&$request->has('device_name')) {
+            $device_name = $request->input('device_name');
+            $token = $request->user()->createToken($device_name)->plainTextToken;
+            return response()->json(['message' => __("controller.success.login"), 'token' => $token, "device_name" => $device_name], 200);
         }
         $request->session()->regenerate();
 
@@ -38,8 +41,15 @@ class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
+        if($request->expectsJson() && $request->bearerToken()) {
+            $token = $request->user()->currentAccessToken();
+            if(!empty($token)) {
+                $token->delete();
+            }
+            return response()->json(['message' => __("controller.success.logout")], 200);
+        }
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

@@ -32,9 +32,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create("course_category", function (Blueprint $table) {
-            $table->foreignId("course_id")->constrained("courses");
-            $table->foreignId("category_id")->constrained("categories");
+        Schema::create("course_categories", function (Blueprint $table) {
+            $table->foreignId("courses_id")->constrained("courses");
+            $table->foreignId("categories_id")->constrained("categories");
         });
 
         Schema::create("user_course", function (Blueprint $table) {
@@ -90,7 +90,7 @@ return new class extends Migration
             $table->boolean('is_multiple_choice')->default(false);
             $table->boolean('is_true_false')->default(false);
             $table->boolean('is_fill_in_the_blank')->default(false);
-            $table->string('answer');
+            $table->string('answer')->nullable();//if multiple choice only
             $table->foreignId('lesson_id')->nullable()->constrained('lessons');
             $table->timestamps();
         });
@@ -106,6 +106,8 @@ return new class extends Migration
             $table->id();
             $table->string('text');
             $table->boolean('is_correct')->default(false);
+            //if there is multiple correct answers, then backend should inform it
+            //assure there is least one correct answer
             $table->foreignId('quiz_id')->nullable()->constrained('quizzes');
             $table->timestamps();
         });

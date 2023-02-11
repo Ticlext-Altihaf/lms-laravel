@@ -2,7 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 return new class extends Migration
 {
@@ -23,11 +25,27 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_teacher')->default(false);
-            $table->boolean('is_student')->default(false);
-            $table->boolean('is_disabled')->default(false);//true if teacher and not approved
             $table->rememberToken();
             $table->timestamps();
         });
+
+        //make default user
+        $user = new \App\Models\User();
+        $random = Str::random(10);
+        $user->name = 'admin';
+        $user->email = 'admin@localhost';
+        $user->password = Hash::make($random);
+        $user->is_admin = true;
+        $user->save();
+        echo PHP_EOL;
+        echo "Default user created with email: ";
+        echo PHP_EOL;
+        echo PHP_EOL;
+        echo "Email: admin@localhost";
+        echo PHP_EOL;
+        echo "Password: $random";
+        echo PHP_EOL;
+
     }
 
     /**

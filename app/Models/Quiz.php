@@ -38,4 +38,9 @@ class Quiz extends Model
     {
         return $this->hasMany(Choice::class);
     }
+
+    public function lesson(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Lessons::class, 'lesson_id');
+    }
 }

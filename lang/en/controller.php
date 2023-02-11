@@ -14,10 +14,11 @@ return [
     */
 
     'success' => array(
-        'create' => 'Created successfully.',
-        'update' => 'Updated successfully.',
-        'delete' => 'Deleted successfully.',
-        'get' => 'Retrieved successfully.',
+        'create' => ':data Created successfully.',
+        'update' => ':data Updated successfully.',
+        'delete' => ':data Deleted successfully.',
+        'get' => ':data Retrieved successfully.',
+        "login" => "Logged in successfully.",
     ),
     'error' => array(
         'create' => 'Failed to create.',
@@ -25,8 +26,10 @@ return [
         'delete' => 'Failed to delete.',
         'get' => 'Failed to retrieve.',
         'unauthorized' => 'Unauthorized.',
+        'not_authorized' => 'Not authorized.',
         'not_found' => 'Not found.',
-        'validation' => 'Validation failed.'
+        'validation' => 'Validation failed.',
+        'data_not_found' => ':data not found.',
     ),
 
 ];

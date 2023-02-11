@@ -24,11 +24,8 @@ class Authenticate extends Middleware
 
     public function handle($request, Closure $next, ...$guards)
     {
-        if($request->expectsJson()) {
-            $bearer = $request->bearerToken();
-            if(empty($bearer)) {
-                return response()->json(['message' => __('auth.unauthenticated')], 401);
-            }
+        $bearer = $request->bearerToken();
+        if($request->expectsJson() && !empty($bearer)) {
             $token = \Laravel\Sanctum\PersonalAccessToken::findToken($bearer);
             if(empty($token)) {
                 return response()->json(['message' => __('auth.unauthenticated')], 401);

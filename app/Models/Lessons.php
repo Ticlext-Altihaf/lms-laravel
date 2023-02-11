@@ -33,4 +33,13 @@ class Lessons extends Model
      */
     protected $casts = [
     ];
+
+    public function course(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Courses::class, 'course_id');
+    }
+    public function quizzes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Quiz::class, 'lesson_id');
+    }
 }

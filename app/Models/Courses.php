@@ -43,4 +43,9 @@ class Courses extends Model
     {
         return $this->belongsToMany(Categories::class, 'course_categories');
     }
+
+    public function lessons(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Lessons::class, 'course_id');
+    }
 }

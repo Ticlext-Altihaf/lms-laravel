@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class CoursesController extends Controller
 {
 
-public function __construct()
+    public function __construct()
     {
         $this->middleware('auth')->except(['index', 'show']);
     }
@@ -102,7 +102,7 @@ public function __construct()
      * @param  \App\Models\Courses  $courses
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, CoursesController $courses)
+    public function show(Request $request, Courses $courses)
     {
         if($request->expectsJson()) {
             return response()->json(['message' => __("controller.success.get"), 'data' => $data]);
@@ -116,7 +116,7 @@ public function __construct()
      * @param  \App\Models\Courses  $courses
      * @return \Illuminate\Http\Response
      */
-    public function edit(CoursesController $courses, Request $request)
+    public function edit(Courses $courses, Request $request)
     {
         if($request->expectsJson()) {
             return response()->json(['message' => __("controller.error.not_found")], 404);
@@ -131,7 +131,7 @@ public function __construct()
      * @param  \App\Models\Courses  $courses
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CoursesController $courses)
+    public function update(Request $request, Courses $courses)
     {
         $user = Auth::user();
         //see if (teacher and approved) or admin
@@ -169,7 +169,7 @@ public function __construct()
      * @param  \App\Models\Courses  $courses
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, CoursesController $courses)
+    public function destroy(Request $request, Courses $courses)
     {
         $user = Auth::user();
         //see if (teacher and approved) or admin

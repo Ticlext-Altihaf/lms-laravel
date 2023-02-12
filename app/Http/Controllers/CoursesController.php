@@ -22,9 +22,11 @@ class CoursesController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Courses::with(['author', 'categories'])->get();
+        $data = Courses::with(['author', 'categories'])->paginate();
+        $data = $data->toArray();
+        $data['message'] = __("controller.success.get", ["data" => trans_choice("data.courses",2)]);
         if($request->expectsJson()) {
-            return response()->json(['message' => __("controller.success.get", ["data" => trans_choice("data.courses", count($data))]), 'data' => $data]);
+            return response()->json($data, 200);
         }
         return view('courses.index', compact('data'));
     }

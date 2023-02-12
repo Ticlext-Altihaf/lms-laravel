@@ -24,13 +24,13 @@ class LessonsController extends Controller
         $course_id = $request->get('course');
         $data = null;
         if($course_id) {
-            $data = Lessons::where('course_id', $course_id)->get();
+            $data = Lessons::where('course_id', $course_id)->paginate();
             //check length of data
             if(sizeof($data) == 0) {
                 $data = null;
             }
         } else {
-            $data = Lessons::all();
+            $data = Lessons::paginate();
         }
         if(!$data) {
             if($request->expectsJson()) {
@@ -38,8 +38,10 @@ class LessonsController extends Controller
             }
             return view('lessons.index', compact('data'));
         }
+        $data = $data->toArray();
+        $data['message'] =  __("controller.success.get", ["data" => trans_choice("data.lessons", sizeof($data))]);
         if($request->expectsJson()) {
-            return response()->json(['message' => __("controller.success.get", ["data" => trans_choice("data.lessons", sizeof($data))]), 'data' => $data]);
+            return response()->json($data, 200);
         }
         return view('lessons.index', compact('data'));
     }

@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $users = array();
-        $faker = fake("id");
+        $faker = fake("id_ID");
         /**
          *
          * create table users
@@ -51,7 +51,8 @@ class DatabaseSeeder extends Seeder
             ]);
         }
         $courses = array();
-        for ($i = 0; $i < 5; $i++) {
+        $course_to_make = rand(5, 10);
+        for ($i = 0; $i < $course_to_make; $i++) {
             /**
              * create table lms.courses
              * (
@@ -107,17 +108,20 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
+        $categories = \App\Models\Categories::all();
         //add categories to courses
         foreach ($courses as $course) {
-            //randomly add 3 categories to each course
-            for ($i = 0; $i < 3; $i++) {
+            //randomly add categories to each course
+            $categories_to_add = rand(1, 5);
+            for ($i = 0; $i < $categories_to_add; $i++) {
                 $course->categories()->attach($categories[rand(0, count($categories) - 1)]);
             }
         }
 
         //add lessons to each course
         foreach ($courses as $course) {
-            for ($i = 0; $i < 5; $i++) {
+            $lessons_to_add = rand(5, 30);
+            for ($i = 0; $i < $lessons_to_add; $i++) {
                 /**
                  * create table lms.lessons
                  * (
@@ -144,7 +148,7 @@ class DatabaseSeeder extends Seeder
                     'description' => 'Description ' . $i,
                     'video_url' => rand(0, 1) ? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' : null,
                     'attachment_path' => rand(0, 1) ? 'https://loremflickr.com/500/500/job?lock='.Str::random() : null,
-                    'section' => $i > 2 ? 2 : 1,
+                    'section' => 'Section ' . ($i % ($lessons_to_add / 5)),
                     'course_id' => $course->id,
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -201,7 +205,7 @@ class DatabaseSeeder extends Seeder
                  * )
                  * collate = utf8mb4_unicode_ci;
                  */
-                $amount_messages = rand(1, 100);
+                $amount_messages = rand(1, 50);
                 $messages = array();
                 for ($k = 0; $k < $amount_messages; $k++) {
                     $parent_message_id = null;

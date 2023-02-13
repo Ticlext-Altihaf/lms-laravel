@@ -322,14 +322,14 @@ class DatabaseSeeder extends Seeder
                          * )
                          * collate = utf8mb4_unicode_ci;
                          */
-                        //0 = text, 1 = youtube video, 2 = image
-                        $type = rand(0, 2);
+                        //0 = text, 1 = youtube video
+                        $type = rand(0, 1);
 
                         $youtube_video = DatabaseSeeder::$based_youtube_videos[rand(0, count(DatabaseSeeder::$based_youtube_videos) - 1)];
                         $lesson->lessonContents()->create([
                             'order_no' => $content_order_no,
-                            'name' => ($type == 0 ? 'Content' : ($type == 1 ? 'Youtube Video' : 'Image')) . ' ' . $content_order_no,
-                            'text' => $type == 0 ? $faker->text(1000) : ($type == 1 ? $youtube_video : 'https://loremflickr.com/500/500/job?random=' . Str::random()),
+                            'name' => ($type == 0 ? 'Content' : 'Video') . ' ' . $content_order_no,
+                            'text' => $type == 0 ? $faker->text(1000) : $youtube_video,
                             'lesson_id' => $lesson->id,
                             'created_at' => now(),
                             'updated_at' => now(),

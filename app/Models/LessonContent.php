@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Quiz extends Model
+class LessonContent extends Model
 {
 
-    protected $table = 'quizzes';
+    protected $table = 'lesson_contents';
     /**
      * The attributes that are mass assignable.
      *
@@ -23,7 +23,7 @@ class Quiz extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'answer'
+
     ];
 
     /**
@@ -32,15 +32,8 @@ class Quiz extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'is_fill_in_the_blank' => 'boolean',
-        'is_true_false' => 'boolean',
-        'is_multiple_choice' => 'boolean',
     ];
 
-    public function choices(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Choice::class);
-    }
 
     public function lesson(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

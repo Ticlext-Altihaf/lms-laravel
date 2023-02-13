@@ -67,26 +67,39 @@ return new class extends Migration
             $table->string('attachment_path')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('chat_room_id')->nullable()->constrained('chat_rooms');
-            $table->foreignId('message_id')->nullable()->constrained('messages');
+            $table->foreignId('message_id')->nullable()->constrained('messages');//CHECK FOR CIRCULAR REFERENCE
             $table->timestamps();
         });
 
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
+            $table->integer("order_no");//order of content
             $table->string('name');
             $table->string('description');
-            $table->string('video_url')->nullable();
-            $table->string('attachment_path')->nullable();
+            $table->string("image")->nullable();
             $table->string("section")->nullable();
             $table->foreignId('chat_room_id')->nullable()->constrained('chat_rooms');
             $table->foreignId('course_id')->nullable()->constrained('courses');
             $table->timestamps();
         });
-
+        Schema::create('lesson_contents', function (Blueprint $table) {
+            $table->id();
+            $table->integer("order_no");//order of content
+            $table->string('name');
+            $table->text('text');
+            $table->foreignId('lesson_id')->nullable()->constrained('lessons');
+            $table->timestamps();
+        });
+        Schema::create("lesson_content_progress", function (Blueprint $table) {
+            $table->foreignId("lesson_content_id")->constrained("lesson_contents");
+            $table->foreignId("user_id")->constrained("users");
+            $table->timestamps();
+        });
         Schema::create('quizzes', function (Blueprint $table) {
             $table->id();
+            $table->integer("order_no");//order of content
             $table->string('name');
-            $table->string('question');
+            $table->string('text');
             $table->boolean('is_multiple_choice')->default(false);
             $table->boolean('is_true_false')->default(false);
             $table->boolean('is_fill_in_the_blank')->default(false);

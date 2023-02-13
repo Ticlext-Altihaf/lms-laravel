@@ -44,10 +44,14 @@ class User extends Authenticatable
         'is_teacher' => 'boolean',
     ];
 
-    public function authoredLesson(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function authoredCourses(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Lessons::class);
+        return $this->hasMany(Courses::class);
     }
 
+    public function lessonsProgress(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LessonContent::class);
+    }
 
 }

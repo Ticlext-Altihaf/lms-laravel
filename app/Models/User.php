@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -54,4 +55,15 @@ class User extends Authenticatable
         return $this->hasMany(LessonContent::class);
     }
 
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (empty($this->image))
+            return null;
+        if (strpos($this->image, 'http') === 0)
+            return $this->image;
+        //fully qualified url
+        return Storage::disk('public')->url($this->image);
+    }
 }

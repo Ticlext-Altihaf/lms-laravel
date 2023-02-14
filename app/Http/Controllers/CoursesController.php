@@ -6,9 +6,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Courses;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class CoursesController extends Controller
 {
+
+    public static array $rules = [
+        'name' => 'required',
+        'description' => 'required',
+        'categories' => 'array',
+        'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ];
 
     public function __construct()
     {
@@ -22,10 +32,19 @@ class CoursesController extends Controller
      */
     public function index(Request $request)
     {
-        $data = Courses::with(['author', 'categories'])->paginate();
-        $data = $data->toArray();
-        $data['message'] = __("controller.success.get", ["data" => trans_choice("data.courses",2)]);
-        if($request->expectsJson()) {
+
+        $data = Courses::with(['author', 'categories']);
+        if ($request->input('author_id')) {
+            $data = Courses::where('author_id', $request->input('author_id'));
+        }
+        $data = $data->paginate()->toArray();
+        foreach ($data['data'] as $key => $course) {
+            if (empty($data['data'][$key]['categories'])) {
+                $data['data'][$key]['categories'] = [];
+            }
+        }
+        $data['message'] = __("controller.success.get", ["data" => trans_choice("data.courses", 2)]);
+        if ($request->expectsJson()) {
             return response()->json($data, 200);
         }
         return view('courses.index', compact('data'));
@@ -68,31 +87,32 @@ class CoursesController extends Controller
         )
          */
         $user = Auth::user();
-        //see if (teacher and approved) or admin
-        if(!($user->is_teacher && $user->is_approved) && !$user->is_admin) {
-            if($request->expectsJson()) {
+        //see if isnt teacher or admin
+        if (!($user->is_teacher) && !$user->is_admin) {
+            if ($request->expectsJson()) {
                 return response()->json(['message' => __("controller.error.unauthorized")], 401);
             }
             return redirect()->back()->with('error', __("controller.error.unauthorized"));
         }
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required',
-            'image' => 'required',
-        ]);
-
-
+        $validator = Validator::make($request->all(), self::$rules);
         if ($validator->fails()) {
-            if($request->expectsJson()) {
+            if ($request->expectsJson()) {
                 return response()->json(['message' => __("controller.error.validation"), 'errors' => $validator->errors()], 400);
             }
             return redirect()->back()->withErrors($validator->errors());
         }
         $validated = $validator->validated();
+        if (isset($validated['image'])) {
+            $disk = Storage::disk('public');
+            $name = $validated['image']->hashName();
+            $path = $validated['image']->storeAs('images', $name, 'public');
+            $validated['image'] = $path;
+            //make public
+            $disk->setVisibility($path, 'public');
+        }
         $validated['author_id'] = $user->id;
         $data = Courses::create($validated);
-        if($request->expectsJson()) {
+        if ($request->expectsJson()) {
             return response()->json(['message' => __("controller.success.created"), 'data' => $data], 201);
         }
         return redirect()->back()->with('success', __("controller.success.created"));
@@ -159,11 +179,7 @@ class CoursesController extends Controller
             return redirect()->back()->with('error', __("controller.error.unauthorized"));
         }
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required',
-            'image' => 'required',
-        ]);
+        $validator = Validator::make($request->all(), self::$rules);
 
         if ($validator->fails()) {
             if($request->expectsJson()) {

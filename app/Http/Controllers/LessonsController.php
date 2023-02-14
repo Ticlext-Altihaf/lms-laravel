@@ -68,29 +68,30 @@ class LessonsController extends Controller
     public function store(Request $request)
     {
         /**
+         *
          * create table lms.lessons
-        (
-        id              bigint unsigned auto_increment
-        primary key,
-        name            varchar(255)    not null,
-        description     varchar(255)    not null,
-        video_url       varchar(255)    null,
-        attachment_path varchar(255)    null,
-        section         varchar(255)    null,
-        chat_room_id    bigint unsigned null,
-        course_id       bigint unsigned null,
-        created_at      timestamp       null,
-        updated_at      timestamp       null,
-        constraint lessons_chat_room_id_foreign
-        foreign key (chat_room_id) references lms.chat_rooms (id),
-        constraint lessons_course_id_foreign
-        foreign key (course_id) references lms.courses (id)
-        )
-        collate = utf8mb4_unicode_ci;
+         * (
+         * id           bigint unsigned auto_increment
+         * primary key,
+         * order_no     int             not null,
+         * name         varchar(255)    not null,
+         * description  varchar(255)    not null,
+         * image        int             null,
+         * section      varchar(255)    null,
+         * chat_room_id bigint unsigned null,
+         * course_id    bigint unsigned null,
+         * created_at   timestamp       null,
+         * updated_at   timestamp       null,
+         * constraint lessons_chat_room_id_foreign
+         * foreign key (chat_room_id) references lms.chat_rooms (id),
+         * constraint lessons_course_id_foreign
+         * foreign key (course_id) references lms.courses (id)
+         * )
+         * collate = utf8mb4_unicode_ci;
          */
         $data = $request->validate([
             'name' => 'required',
-            'description' => 'required',
+            'section' => 'required',
             'course_id' => 'required',
         ]);
         $course = Courses::find($data['course_id']);
@@ -98,26 +99,47 @@ class LessonsController extends Controller
             if($request->expectsJson()) {
                 return response()->json(['message' => __("controller.error.data_not_found", ['data' => trans_choice("data.courses", 1)])], 404);
             }
-            return redirect()->back()->with('error', __("controller.error.data_not_found", ['data' =>  trans_choice("data.courses", 1)]));
+            return redirect()->back()->with('error', __("controller.error.data_not_found", ['data' => trans_choice("data.courses", 1)]));
         }
         //check if valid author
-        if($course->author_id != auth()->user()->id) {
-            if($request->expectsJson()) {
+        if ($course->author_id != auth()->user()->id && !auth()->user()->is_admin) {
+            if ($request->expectsJson()) {
                 return response()->json(['message' => __("controller.error.not_authorized")], 403);
             }
             return redirect()->back()->with('error', __("controller.error.not_authorized"));
         }
+        if (empty($data['order_no'])) {
+            //count all lesson
+            $data['order_no'] = Lessons::where('course_id', $data['course_id'])->count() + 1;
+        }
         $lesson = Lessons::create($data);
-        if($request->expectsJson()) {
+        if (empty($lesson['chat_room_id'])) {
+            $chat_room = $this->makeChatRoom($lesson);
+            $lesson->chat_room_id = $chat_room->id;
+            $lesson->save();
+        }
+        if ($request->expectsJson()) {
             return response()->json(['message' => __("controller.success.create", ['data' => trans_choice("data.lessons", 1)]), 'data' => $lesson]);
         }
         return redirect()->route('lessons.index')->with('success', __("controller.success.create", ['data' => trans_choice("data.lessons", 1)]));
     }
 
+    protected function makeChatRoom(Lessons $lesson)
+    {
+        $chat_room = $lesson->chat_room()->create([
+            'name' => $lesson->name,
+            'description' => $lesson->description,
+            'image' => $lesson->image,
+            'type' => 'lesson',
+            'type_id' => $lesson->id,
+        ]);
+        return $chat_room;
+    }
+
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Lessons  $lessons
+     * @param \App\Models\Lessons $lessons
      * @return \Illuminate\Http\Response
      */
     public function show(Lessons $lesson, Request $request)

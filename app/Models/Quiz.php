@@ -37,6 +37,13 @@ class Quiz extends Model
         'is_multiple_choice' => 'boolean',
     ];
 
+    protected $appends = ['type'];
+
+    public function getTypeAttribute(): string
+    {
+        return 'quiz';
+    }
+
     public function choices(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Choice::class);

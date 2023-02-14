@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Categories extends Model
 {
@@ -34,9 +35,10 @@ class Categories extends Model
     protected $casts = [
     ];
 
-    public function parent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+
+    public function children(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->belongsTo(Categories::class, 'parent_id');
+        return $this->hasMany(Categories::class, 'parent_id');
     }
 
     public function courses(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -44,4 +46,15 @@ class Categories extends Model
         return $this->belongsToMany(Courses::class, 'course_categories');
     }
 
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute(): ?string
+    {
+        if (empty($this->image))
+            return null;
+        if (strpos($this->image, 'http') === 0)
+            return $this->image;
+        //fully qualified url
+        return Storage::disk('public')->url($this->image);
+    }
 }

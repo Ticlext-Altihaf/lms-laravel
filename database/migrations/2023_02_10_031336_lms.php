@@ -75,24 +75,21 @@ return new class extends Migration
             $table->id();
             $table->integer("order_no");//order of content
             $table->string('name');
-            $table->string('description');
+            $table->string('description')->nullable();//reserved
             $table->string("image")->nullable();
             $table->string("section")->nullable();
             $table->foreignId('chat_room_id')->nullable()->constrained('chat_rooms');
             $table->foreignId('course_id')->nullable()->constrained('courses');
             $table->timestamps();
         });
+
+
         Schema::create('lesson_contents', function (Blueprint $table) {
             $table->id();
             $table->integer("order_no");//order of content
             $table->string('name');
             $table->text('text');
-            $table->foreignId('lesson_id')->nullable()->constrained('lessons');
-            $table->timestamps();
-        });
-        Schema::create("lesson_content_progress", function (Blueprint $table) {
-            $table->foreignId("lesson_content_id")->constrained("lesson_contents");
-            $table->foreignId("user_id")->constrained("users");
+            $table->foreignId('lesson_id')->constrained('lessons');
             $table->timestamps();
         });
         Schema::create('quizzes', function (Blueprint $table) {
@@ -104,10 +101,14 @@ return new class extends Migration
             $table->boolean('is_true_false')->default(false);
             $table->boolean('is_fill_in_the_blank')->default(false);
             $table->string('answer')->nullable();//if multiple choice only
-            $table->foreignId('lesson_id')->nullable()->constrained('lessons');
+            $table->foreignId('lesson_id')->constrained('lessons');
             $table->timestamps();
         });
-
+        Schema::create("lesson_content_progress", function (Blueprint $table) {
+            $table->foreignId("lesson_content_id")->constrained("lesson_contents");
+            $table->foreignId("user_id")->constrained("users");
+            $table->timestamps();
+        });
         Schema::create("progress_quiz", function (Blueprint $table) {
             $table->foreignId("quiz_id")->constrained("quizzes");
             $table->foreignId("user_id")->constrained("users");

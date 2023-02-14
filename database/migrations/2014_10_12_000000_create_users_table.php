@@ -31,7 +31,7 @@ return new class extends Migration
 
         //make default user
         $user = new \App\Models\User();
-        $random = Str::random(10);
+        $random = "password";
         $user->name = 'admin';
         $user->email = 'admin@localhost';
         $user->password = Hash::make($random);

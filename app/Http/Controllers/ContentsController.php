@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Courses;
 use App\Models\LessonContent;
 use App\Models\Lessons;
 use App\Models\Quiz;
@@ -65,8 +66,9 @@ class ContentsController extends Controller
             }
             return redirect()->back()->with('error', __('controller.error.not_found'));
         }
-        $course = $lesson->course();
-        if ($course->author()->id != auth()->user()->id && !auth()->user()->is_admin) {
+        $course = Courses::find($lesson->course_id);
+        $author = $course->author()->first();
+        if ($author->id != auth()->user()->id && !auth()->user()->is_admin) {
             if ($request->expectsJson()) {
                 return response()->json(['message' => __('controller.error.not_authorized')], 403);
             }
@@ -76,6 +78,16 @@ class ContentsController extends Controller
         if ($data['type'] == 'quiz') {
             $data = Quiz::create($data);
         } else {
+            if($data['type'] == "youtube"){
+                //validate text starts with https://www.youtube.com/watch?v= or https://youtu.be/
+                $regex = "/^(https:\/\/www\.youtube\.com\/watch\?v=|https:\/\/youtu\.be\/)([a-zA-Z0-9_-]{11})$/";
+                if(!preg_match($regex, $data['text'])){
+                    if ($request->expectsJson()) {
+                        return response()->json(['message' => __('controller.error.invalid_youtube_url')], 400);
+                    }
+                    return redirect()->back()->with('error', __('controller.error.invalid_youtube_url'));
+                }
+            }
             $data = LessonContent::create($data);
         }
         $data->save();

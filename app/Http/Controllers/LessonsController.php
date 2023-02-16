@@ -149,25 +149,10 @@ class LessonsController extends Controller
         $contents = array();
         foreach ($lesson->quizzes as $quiz) {
             $qa = $quiz->toArray();
-            $qa['type'] = 'quiz';
             $contents[] = $qa;
         }
         foreach ($lesson->lessonContents as $content) {
             $qa = $content->toArray();
-            //check if start with https://www.youtube.com/watch?v=
-            if (substr($qa['text'], 0, 32) === "https://www.youtube.com/watch?v=") {
-                $qa['type'] = 'video';
-                $qa['video_id'] = substr($qa['text'], 32);
-                //ensure no extra characters
-                if (strpos($qa['video_id'], '&') !== false) {
-                    $qa['video_id'] = substr($qa['video_id'], 0, strpos($qa['video_id'], '&'));
-                }
-                //check if start with https we gonna assume its an attachment
-            } else if (substr($qa['text'], 0, 5) === "https") {
-                $qa['type'] = 'attachment';
-            } else {
-                $qa['type'] = 'content';
-            }
             $contents[] = $qa;
         }
         //sort by order_no

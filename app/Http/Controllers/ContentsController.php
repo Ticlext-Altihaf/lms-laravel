@@ -45,6 +45,19 @@ class ContentsController extends Controller
         return view('contents.index', compact('contents'));
     }
 
+    function validateYoutube($data, $request){
+        if($data['type'] == "youtube_video"){
+            //validate text starts with https://www.youtube.com/watch?v= or https://youtu.be/
+            $regex = "/^(https:\/\/www\.youtube\.com\/watch\?v=|https:\/\/youtu\.be\/)([a-zA-Z0-9_-]{11})$/";
+            if(!preg_match($regex, $data['text'])){
+                if ($request->expectsJson()) {
+                    return response()->json(['message' => __('controller.error.invalid_youtube_url')], 400);
+                }
+                return redirect()->back()->with('error', __('controller.error.invalid_youtube_url'));
+            }
+        }
+        return null;
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -78,15 +91,9 @@ class ContentsController extends Controller
         if ($data['type'] == 'quiz') {
             $data = Quiz::create($data);
         } else {
-            if($data['type'] == "youtube"){
-                //validate text starts with https://www.youtube.com/watch?v= or https://youtu.be/
-                $regex = "/^(https:\/\/www\.youtube\.com\/watch\?v=|https:\/\/youtu\.be\/)([a-zA-Z0-9_-]{11})$/";
-                if(!preg_match($regex, $data['text'])){
-                    if ($request->expectsJson()) {
-                        return response()->json(['message' => __('controller.error.invalid_youtube_url')], 400);
-                    }
-                    return redirect()->back()->with('error', __('controller.error.invalid_youtube_url'));
-                }
+            $data = $this->validateYoutube($data, $request);
+            if($data){
+                return $data;
             }
             $data = LessonContent::create($data);
         }
@@ -105,7 +112,7 @@ class ContentsController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -117,7 +124,57 @@ class ContentsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->validate([
+            'name' => 'string',
+            'type' => 'required',
+            'text' => 'string',
+            'order_no' => 'integer',
+            'lesson_id' => 'required',
+        ]);
+        $lesson = Lessons::find($data['lesson_id']);
+        if (!$lesson) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => __('controller.error.not_found')], 404);
+            }
+            return redirect()->back()->with('error', __('controller.error.not_found'));
+        }
+        $course = Courses::find($lesson->course_id);
+        $author = $course->author()->first();
+        if ($author->id != auth()->user()->id && !auth()->user()->is_admin) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => __('controller.error.not_authorized')], 403);
+            }
+            return redirect()->back()->with('error', __('controller.error.not_authorized'));
+        }
+
+        if ($data['type'] == 'quiz') {
+            $model = Quiz::find($id);
+        } else {
+            $data = $this->validateYoutube($data, $request);
+            if($data){
+                return $data;
+            }
+            $model = LessonContent::find($id);
+        }
+
+        if (!$model) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => __('controller.error.not_found')], 404);
+            }
+            return redirect()->back()->with('error', __('controller.error.not_found'));
+        }
+        //check lesson_id
+        if ($model->lesson_id != $data['lesson_id']) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => __('controller.error.not_authorized')], 403);
+            }
+            return redirect()->back()->with('error', __('controller.error.not_authorized'));
+        }
+        $data = $model->update($data);
+        if ($request->expectsJson()) {
+            return response()->json(['data' => $data, 'message' => __('controller.success.get')], 200);
+        }
+        return view('contents.show', compact('data'));
     }
 
     /**

@@ -48,8 +48,10 @@ class ContentsController extends Controller
     function validateYoutube($data, $request){
         if($data['type'] == "youtube_video"){
             //validate text starts with https://www.youtube.com/watch?v= or https://youtu.be/
+            //remove extra parameters
+            $data['text'] = preg_replace("/&.*/", "", $data['text']);
             $regex = "/^(https:\/\/www\.youtube\.com\/watch\?v=|https:\/\/youtu\.be\/)([a-zA-Z0-9_-]{11})$/";
-            if(!preg_match($regex, $data['text'])){
+            if (!preg_match($regex, $data['text'])) {
                 if ($request->expectsJson()) {
                     return response()->json(['message' => __('controller.error.invalid_youtube_url')], 400);
                 }
@@ -91,9 +93,9 @@ class ContentsController extends Controller
         if ($data['type'] == 'quiz') {
             $data = Quiz::create($data);
         } else {
-            $data = $this->validateYoutube($data, $request);
-            if($data){
-                return $data;
+            $result = $this->validateYoutube($data, $request);
+            if ($result) {
+                return $result;
             }
             $data = LessonContent::create($data);
         }
@@ -112,7 +114,11 @@ class ContentsController extends Controller
      */
     public function show($id)
     {
-
+        //not supported
+        if ($request->expectsJson()) {
+            return response()->json(['message' => __('controller.error.not_found')], 400);
+        }
+        return redirect()->back()->with('error', __('controller.error.not_found'));
     }
 
     /**
@@ -150,9 +156,9 @@ class ContentsController extends Controller
         if ($data['type'] == 'quiz') {
             $model = Quiz::find($id);
         } else {
-            $data = $this->validateYoutube($data, $request);
-            if($data){
-                return $data;
+            $result = $this->validateYoutube($data, $request);
+            if ($result) {
+                return $result;
             }
             $model = LessonContent::find($id);
         }
@@ -183,8 +189,39 @@ class ContentsController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        //
+        $type = $request->get('type');
+        if (!$type) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => __('controller.error.not_found')], 404);
+            }
+            return redirect()->back()->with('error', __('controller.error.not_found'));
+        }
+        if ($type == 'quiz') {
+            $model = Quiz::find($id);
+        } else {
+            $model = LessonContent::find($id);
+        }
+        if (!$model) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => __('controller.error.not_found')], 404);
+            }
+            return redirect()->back()->with('error', __('controller.error.not_found'));
+        }
+        $lesson = $model->lesson()->first();
+        $course = $lesson->course()->first();
+        $author = $course->author()->first();
+        if ($author->id != auth()->user()->id && !auth()->user()->is_admin) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => __('controller.error.not_authorized')], 403);
+            }
+            return redirect()->back()->with('error', __('controller.error.not_authorized'));
+        }
+        $model->delete();
+        if ($request->expectsJson()) {
+            return response()->json(['data' => null, 'message' => __('controller.success.delete')], 200);
+        }
+        return redirect()->back()->with('success', __('controller.success.delete'));
     }
 }

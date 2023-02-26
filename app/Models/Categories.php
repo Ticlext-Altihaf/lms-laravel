@@ -15,7 +15,8 @@ class Categories extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-
+        'name',
+        'description',
     ];
 
     /**
@@ -48,13 +49,10 @@ class Categories extends Model
 
     protected $appends = ['image_url'];
 
+
     public function getImageUrlAttribute(): ?string
     {
-        if (empty($this->image))
-            return null;
-        if (strpos($this->image, 'http') === 0)
-            return $this->image;
-        //fully qualified url
-        return Storage::disk('public')->url($this->image);
+        return User::getImageUrlAttributeS($this);
     }
+
 }

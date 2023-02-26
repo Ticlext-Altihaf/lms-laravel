@@ -13,6 +13,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public bool $is_admin;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -57,13 +59,20 @@ class User extends Authenticatable
 
     protected $appends = ['image_url'];
 
+
     public function getImageUrlAttribute(): ?string
     {
-        if (empty($this->image))
-            return null;
-        if (strpos($this->image, 'http') === 0)
-            return $this->image;
-        //fully qualified url
-        return Storage::disk('public')->url($this->image);
+        return self::getImageUrlAttributeS($this);
     }
+
+    public static function getImageUrlAttributeS($that): ?string
+    {
+        if (empty($that->image))
+            return null;
+        if (strpos($that->image, 'http') === 0)
+            return $that->image;
+        //fully qualified url
+        return Storage::disk('public')->url($that->image);
+    }
+
 }

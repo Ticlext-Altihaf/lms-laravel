@@ -88,6 +88,11 @@ return [
 
     'locale' => 'id',
 
+    'locales' => [
+        'en' => 'English',
+        'id' => 'Indonesia',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale

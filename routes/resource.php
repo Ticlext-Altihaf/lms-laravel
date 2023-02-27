@@ -1,6 +1,7 @@
 <?php
 
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
@@ -9,4 +10,17 @@ Route::resource('lessons', \App\Http\Controllers\LessonsController::class);
 Route::resource('quizzes', \App\Http\Controllers\QuizzesController::class);
 Route::resource('categories', \App\Http\Controllers\CategoriesController::class);
 Route::resource('contents', \App\Http\Controllers\ContentsController::class);
+Route::resource('users', \App\Http\Controllers\UsersController::class);
 Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
+Route::get('/locale/{locale}', function (string $locale, \Illuminate\Http\Request $request) {
+    $locales = ['en', 'id'];
+    if (!in_array($locale, $locales)) {
+        if ($request->expectsJson()) return response()->json(['message' => 'Locale not found', 'data' => $locale], 404);
+        return redirect()->back();
+    }
+
+    App::setLocale($locale);
+    $request->session()->put('locale', $locale);
+    if ($request->expectsJson()) return response()->json(['message' => 'Locale changed', 'data' => $locale], 200);
+    return redirect()->back();
+});

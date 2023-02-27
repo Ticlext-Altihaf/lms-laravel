@@ -37,6 +37,9 @@ class Lessons extends Model
     protected $casts = [
     ];
 
+    protected $appends = ['contents_count'];
+
+
     public function course(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Courses::class, 'course_id');
@@ -52,9 +55,15 @@ class Lessons extends Model
         return $this->hasMany(LessonContent::class, 'lesson_id');
     }
 
-    public function contents()
+
+    public function contents(): \Illuminate\Database\Eloquent\Collection
     {//merge quiz and lessonContent
-        return $this->quizzes->merge($this->lessonContents);
+        return $this->quizzes()->get()->merge($this->lessonContents()->get());
+    }
+
+    public function getContentsCountAttribute(): int
+    {
+        return $this->contents()->count();
     }
 
     public function chat_room(): \Illuminate\Database\Eloquent\Relations\BelongsTo

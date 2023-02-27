@@ -128,20 +128,23 @@ class CoursesController extends Controller
     {
         $data = $course->load(['author', 'categories', 'lessons'])->loadCount(['lessons']);
         $lessons = $data->lessons;
+
         $sections = array();
         $lessons_sectioned = array();
         foreach ($lessons as $lesson){
-            if(!in_array($lesson->section, $sections)) {
+            if (!in_array($lesson->section, $sections)) {
                 array_push($sections, $lesson->section);
             }
-            if(!array_key_exists($lesson->section, $lessons_sectioned)) {
+            if (!array_key_exists($lesson->section, $lessons_sectioned)) {
                 $lessons_sectioned[$lesson->section] = array();
             }
             array_push($lessons_sectioned[$lesson->section], $lesson);
         }
         $data->sections = $sections;
         $data->lessons_sectioned = $lessons_sectioned;
-        if($request->expectsJson()) {
+        $data = $data->toArray();
+        unset($data['lessons']);
+        if ($request->expectsJson()) {
             return response()->json(['message' => __("controller.success.get", ['data' => trans_choice("data.courses", 1)]), 'data' => $data]);
         }
         return view("courses.show", compact('data'));

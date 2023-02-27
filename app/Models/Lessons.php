@@ -63,7 +63,7 @@ class Lessons extends Model
 
     public function getContentsCountAttribute(): int
     {
-        return $this->contents()->count();
+        return $this->quizzes()->count() + $this->lessonContents()->count();
     }
 
     public function chat_room(): \Illuminate\Database\Eloquent\Relations\BelongsTo

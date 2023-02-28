@@ -35,7 +35,7 @@ class CoursesController extends Controller
 
         $data = Courses::with(['author', 'categories']);
         if ($request->input('author_id')) {
-            $data = Courses::where('author_id', $request->input('author_id'));
+            $data = $data->where('author_id', $request->input('author_id'));
         }
         $data = $data->paginate()->toArray();
         foreach ($data['data'] as $key => $course) {

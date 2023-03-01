@@ -37,6 +37,19 @@ class CoursesController extends Controller
         if ($request->input('author_id')) {
             $data = $data->where('author_id', $request->input('author_id'));
         }
+        if ($request->input('category')) {
+            if ($request->input('category') != 'all') {
+                $data = $data->whereHas('categories', function ($query) use ($request) {
+                    $query->where('categories.id', $request->input('category'));
+                });
+            }
+        }
+        if ($request->input('search')) {
+            //check if empty string
+            if (trim($request->input('search')) != '') {
+                $data = $data->where('name', 'like', '%' . $request->input('search') . '%');
+            }
+        }
         $data = $data->paginate()->toArray();
         foreach ($data['data'] as $key => $course) {
             if (empty($data['data'][$key]['categories'])) {
@@ -46,6 +59,14 @@ class CoursesController extends Controller
         $data['message'] = __("controller.success.get", ["data" => trans_choice("data.courses", 2)]);
         if ($request->expectsJson()) {
             return response()->json($data, 200);
+        }
+        $data['available_categories'] = \App\Models\Categories::all()->toArray();
+        $data['params'] = $request->all();
+        if (!$request->input('category')) {
+            $data['params']['category'] = 'all';
+        }
+        if (!$request->input('search')) {
+            $data['params']['search'] = '';
         }
         return view('courses.index', compact('data'));
     }

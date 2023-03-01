@@ -70,5 +70,8 @@ Route::get('/lang/{locale}/{ns}.json', function (Request $request, string $local
     if (!isset($dictionary[$ns])) return response()->json(['message' => __('controller.error.not_found', ['data' => 'Locale']), 'data' => $ns], 404);
     return response()->json($dictionary[$ns], 200);
 });
+Route::get('/csrf', function (Request $request) {
+    return response()->json(['message' => __('controller.success.get', ['data' => 'CSRF Cookie']), 'data' => $request->cookie('XSRF-TOKEN')], 200);
+});
 require __DIR__ . '/auth.php';
 require __DIR__ . '/resource.php';

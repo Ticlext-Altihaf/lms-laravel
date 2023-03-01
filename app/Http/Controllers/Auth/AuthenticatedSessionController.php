@@ -5,12 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -28,7 +25,7 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         $request->authenticate();
-        if($request->expectsJson()&&$request->has('device_name')) {
+        if ($request->expectsJson() && $request->has('device_name')) {
             $device_name = $request->input('device_name');
             $token = $request->user()->createToken($device_name)->plainTextToken;
             return response()->json(['message' => __("controller.success.login"), 'token' => $token, "device_name" => $device_name], 200);

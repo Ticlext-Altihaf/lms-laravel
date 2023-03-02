@@ -37,6 +37,7 @@ class Courses extends Model
      */
     protected $casts = [
     ];
+    protected $appends = ['category', 'image_url'];
 
     public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -48,12 +49,19 @@ class Courses extends Model
         return $this->belongsToMany(Categories::class, 'course_categories');
     }
 
+    public function getCategoryAttribute(): ?Categories
+    {
+        $category = $this->categories()->first();
+        if ($category)
+            return $category;
+        return null;
+    }
+
     public function lessons(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Lessons::class, 'course_id');
     }
 
-    protected $appends = ['image_url'];
 
     public function getImageUrlAttribute(): ?string
     {

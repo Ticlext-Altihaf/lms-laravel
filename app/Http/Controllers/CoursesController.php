@@ -159,7 +159,7 @@ class CoursesController extends Controller
             if (!array_key_exists($lesson->section, $lessons_sectioned)) {
                 $lessons_sectioned[$lesson->section] = array();
             }
-            array_push($lessons_sectioned[$lesson->section], $lesson);
+            array_push($lessons_sectioned[$lesson->section], $lesson->toArray());
         }
         $data->sections = $sections;
         $data->lessons_sectioned = $lessons_sectioned;

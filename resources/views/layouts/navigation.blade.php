@@ -405,7 +405,7 @@
 
         <!-- Brand -->
         <a class="navbar-brand me-0" href="index.html">
-            <img src="assets/img/brand.svg" class="navbar-brand-img" alt="...">
+            <img src="{{asset('assets')}}/img/brand.svg" class="navbar-brand-img" alt="...">
         </a>
 
         <!-- Vertical Menu -->
@@ -871,7 +871,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="index.html" target="_blank">
-                                    <img src="assets/img/menu/home-v1.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v1.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v1</h6>
@@ -880,7 +880,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v2.html" target="_blank">
-                                    <img src="assets/img/menu/home-v2.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v2.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v2</h6>
@@ -889,7 +889,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v3.html" target="_blank">
-                                    <img src="assets/img/menu/home-v3.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v3.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v3</h6>
@@ -898,7 +898,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v4.html" target="_blank">
-                                    <img src="assets/img/menu/home-v4.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v4.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v4</h6>
@@ -907,7 +907,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v5.html" target="_blank">
-                                    <img src="assets/img/menu/home-v5.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v5.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v5</h6>
@@ -916,7 +916,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v6.html" target="_blank">
-                                    <img src="assets/img/menu/home-v6.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v6.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v6</h6>
@@ -925,7 +925,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v7.html" target="_blank">
-                                    <img src="assets/img/menu/home-v7.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v7.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v7</h6>
@@ -934,7 +934,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v8.html" target="_blank">
-                                    <img src="assets/img/menu/home-v8.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v8.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v8</h6>
@@ -943,7 +943,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v9.html" target="_blank">
-                                    <img src="assets/img/menu/home-v9.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v9.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v9</h6>
@@ -952,7 +952,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v10.html" target="_blank">
-                                    <img src="assets/img/menu/home-v10.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v10.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v10</h6>
@@ -961,7 +961,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v11.html" target="_blank">
-                                    <img src="assets/img/menu/home-v11.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v11.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v11</h6>
@@ -970,7 +970,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v12.html" target="_blank">
-                                    <img src="assets/img/menu/home-v12.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v12.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v12</h6>
@@ -979,7 +979,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v13.html" target="_blank">
-                                    <img src="assets/img/menu/home-v13.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v13.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v13</h6>
@@ -988,7 +988,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v14.html" target="_blank">
-                                    <img src="assets/img/menu/home-v14.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v14.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v14</h6>
@@ -997,7 +997,7 @@
                             <div class="col mb-5 col-wd-auto">
                                 <!-- List -->
                                 <a class="dropdown-item" href="home-v15.html" target="_blank">
-                                    <img src="assets/img/menu/home-v15.jpg"
+                                    <img src="{{asset('assets')}}/img/menu/home-v15.jpg"
                                          class="img-fluid shadow rounded border d-flex mx-auto mb-5 h-md-152" alt="...">
                                     <!-- Heading -->
                                     <h6 class="text-center mb-0">Home v15</h6>

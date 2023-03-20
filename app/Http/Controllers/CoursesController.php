@@ -148,21 +148,7 @@ class CoursesController extends Controller
     public function show(Request $request, Courses $course)
     {
         $data = $course->load(['author', 'categories', 'lessons'])->loadCount(['lessons']);
-        $lessons = $data->lessons;
-
-        $sections = array();
-        $lessons_sectioned = array();
-        foreach ($lessons as $lesson){
-            if (!in_array($lesson->section, $sections)) {
-                array_push($sections, $lesson->section);
-            }
-            if (!array_key_exists($lesson->section, $lessons_sectioned)) {
-                $lessons_sectioned[$lesson->section] = array();
-            }
-            array_push($lessons_sectioned[$lesson->section], $lesson->toArray());
-        }
-        $data->sections = $sections;
-        $data->lessons_sectioned = $lessons_sectioned;
+        $data->sectioned();
         $data = $data->toArray();
         unset($data['lessons']);
         if ($request->expectsJson()) {

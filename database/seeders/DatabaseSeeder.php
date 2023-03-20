@@ -123,7 +123,7 @@ class DatabaseSeeder extends Seeder
         //add categories to courses
         foreach ($courses as $course) {
             //randomly add categories to each course
-            $categories_to_add = rand(1, 5);
+            $categories_to_add = rand(0, 5);
             for ($i = 0; $i < $categories_to_add; $i++) {
                 $category = $categories[rand(0, count($categories) - 1)];
                 //check if exists
@@ -136,7 +136,7 @@ class DatabaseSeeder extends Seeder
 
         //add lessons to each course
         foreach ($courses as $course) {
-            $lessons_to_add = rand(5, 30);
+            $lessons_to_add = rand(0, 10);
             for ($i = 1; $i < $lessons_to_add; $i++) {
                 /**
                  * create table lms.lessons
@@ -221,7 +221,7 @@ class DatabaseSeeder extends Seeder
                  * )
                  * collate = utf8mb4_unicode_ci;
                  */
-                $amount_messages = rand(1, 50);
+                $amount_messages = rand(0, 50);
                 $messages = array();
                 for ($k = 0; $k < $amount_messages; $k++) {
                     $parent_message_id = null;
@@ -240,7 +240,7 @@ class DatabaseSeeder extends Seeder
                 }
 
 
-                $content_to_add = rand(2, 15);
+                $content_to_add = rand(0, 15);
                 for ($content_order_no = 1; $content_order_no < $content_to_add; $content_order_no++) {
                     $should_add_quiz = rand(0, 1);
                     if ($should_add_quiz) {

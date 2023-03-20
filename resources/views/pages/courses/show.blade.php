@@ -2,12 +2,12 @@
 @section('content')
     @component('components.breadcrumbs')
         <li class="breadcrumb-item">
-            <a class="text-gray-800" href="/">
+            <a class="text-gray-800" href="{{url('/')}}">
                 Home
             </a>
         </li>
         <li class="breadcrumb-item">
-            <a class="text-gray-800" href="/courses">
+            <a class="text-gray-800" href="{{url('/courses')}}">
                 Courses List
             </a>
         </li>

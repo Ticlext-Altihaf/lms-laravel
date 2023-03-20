@@ -144,9 +144,10 @@ class LessonsController extends Controller
      */
     public function show(Lessons $lesson, Request $request, $page = 1)
     {
-        $lesson = $lesson->load('course', 'quizzes', 'chat_room', 'quizzes.choices', 'lessonContents')->loadCount('quizzes', 'lessonContents');
+        $lesson = $lesson->load('course', 'course.lessons', 'quizzes', 'chat_room', 'quizzes.choices', 'lessonContents')->loadCount('quizzes', 'lessonContents');
         //merge lesson contents with quizzes
         $contents = array();
+        $lesson->course->sectioned();
         foreach ($lesson->quizzes as $quiz) {
             $qa = $quiz->toArray();
             $contents[] = $qa;

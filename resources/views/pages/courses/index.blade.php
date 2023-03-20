@@ -151,9 +151,9 @@
                             </a>
 
                             <!-- Preheading -->
-                            <a href="{{url('categories')}}"><span
-                                    class="mb-1 d-inline-block text-gray-800">{{$course['categories'][0]['name']}}</span></a>
-
+                            @if(count($course['categories']) >0 )
+                            <a href="{{url('categories')}}"><span class="mb-1 d-inline-block text-gray-800">{{$course['categories'][0]['name']}}</span></a>
+                            @endif
                             <!-- Heading -->
                             <div class="position-relative">
                                 <a href="{{url('courses/'.$course['id'])}}" class="d-block stretched-link"><h4

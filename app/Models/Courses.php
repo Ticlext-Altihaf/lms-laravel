@@ -72,4 +72,27 @@ class Courses extends Model
         //fully qualified url
         return Storage::disk('public')->url($this->image);
     }
+    public static function Section($data)
+    {
+        $sections = array();
+        $lessons = $data->lessons;
+        $lessons_sectioned = array();
+        foreach ($lessons as $lesson){
+            if (!in_array($lesson->section, $sections)) {
+                array_push($sections, $lesson->section);
+            }
+            if (!array_key_exists($lesson->section, $lessons_sectioned)) {
+                $lessons_sectioned[$lesson->section] = array();
+            }
+            array_push($lessons_sectioned[$lesson->section], $lesson->toArray());
+        }
+        $data->sections = $sections;
+        $data->lessons_sectioned = $lessons_sectioned;
+        return $data;
+    }
+
+    public function sectioned(){
+        Courses::Section($this);
+        return $this;
+    }
 }

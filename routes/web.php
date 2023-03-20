@@ -30,3 +30,6 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/resource.php';
+
+Route::get('lessons/{lesson}/{page}',  [\App\Http\Controllers\LessonsController::class, 'show']);
+

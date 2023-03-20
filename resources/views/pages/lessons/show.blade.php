@@ -833,10 +833,10 @@
             <div class="row mb-11">
                 <div class="col-lg-11 col-wd-12 ms-lg-auto pt-11 pt-lg-8">
                     <h2 class="font-size-xl mb-6">
-                        Introduction to the course
+                        {{$lesson['name']}}
                     </h2>
-
-                    <a href="https://www.youtube.com/watch?v=9I-Y6VQ6tyI" class="d-block sk-thumbnail rounded mb-8" data-fancybox="">
+                    @if($lesson['content']['type'] == 'youtube_video')
+                    <a href="https://www.youtube.com/watch?v={{$lesson['content']['video_id']}}" class="d-block sk-thumbnail rounded mb-8" data-fancybox="">
                         <div class="h-90p w-90p rounded-circle bg-white size-30-all d-inline-flex align-items-center justify-content-center position-absolute center z-index-1">
                             <!-- Icon -->
                             <svg width="14" height="16" viewBox="0 0 14 16" xmlns="http://www.w3.org/2000/svg">
@@ -844,28 +844,12 @@
                             </svg>
 
                         </div>
-                        <img class="rounded shadow-light-lg" src="{{asset('assets')}}/img/products/product-2.jpg" alt="...">
+                        <img class="rounded shadow-light-lg" src="https://img.youtube.com/vi/{{$lesson['content']['video_id']}}/0.jpg" alt="...">
                     </a>
-
+                    @endif
                     <h3 class="">Course Description</h3>
 
-                    <p class="mb-6 line-height-md">Do you want to become a UI/UX designer but you don't know where to start? This course will allow you to develop your user interface design skills and you can add UI designer to your CV and start getting clients for your skills.</p>
-                    <p class="mb-6 line-height-md">Hi everyone. I'm Arash and I'm a UI/UX designer. In this course, I will help you learn and master Figma app comprehensively from scratch. Figma is an innovative and brilliant tool for User Interface design. It's used by everyone from entrepreneurs and start-ups to Apple, Airbnb, Facebook, etc.</p>
-                    <p class="collapse mb-6 line-height-md" id="readcollapseExample">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente  I will help you learn and master Figma app comprehensively from scratch. Figma is an innovative and brilliant tool for User Interface design. It's used by everyone from entrepreneurs ea proident.</p>
-                    <a class="text-teal read-more h6 d-inline-block mb-8" data-bs-toggle="collapse" href="#readcollapseExample" role="button" aria-expanded="false" aria-controls="readcollapseExample">
-                        <span class="d-inline-flex align-items-center more">
-                            Read More
-                            <span class="d-flex align-items-center justify-content-center bg-teal rounded-circle ms-2 p-2 w-26p">
-                                <i class="fas fa-plus font-size-10 text-white"></i>
-                            </span>
-                        </span>
-                        <span class="d-inline-flex align-items-center less">
-                            Read Less
-                            <span class="d-flex align-items-center justify-content-center bg-teal rounded-circle ms-2 p-2 w-26p">
-                                <i class="fas fa-minus font-size-10 text-white"></i>
-                            </span>
-                        </span>
-                    </a>
+                    <p class="mb-6 line-height-md">{{$lesson['description']}}</p>
 
                     <div class="d-md-flex align-items-center justify-content-between mb-8">
                         <a href="#" class="btn btn-teal d-flex align-items-center text-white mb-5 mb-md-0 btn-block mw-md-280p justify-content-center">

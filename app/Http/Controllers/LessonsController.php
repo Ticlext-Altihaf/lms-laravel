@@ -142,7 +142,7 @@ class LessonsController extends Controller
      * @param \App\Models\Lessons $lessons
      * @return \Illuminate\Http\Response
      */
-    public function show(Lessons $lesson, Request $request)
+    public function show(Lessons $lesson, Request $request, $page = 1)
     {
         $lesson = $lesson->load('course', 'quizzes', 'chat_room', 'quizzes.choices', 'lessonContents')->loadCount('quizzes', 'lessonContents');
         //merge lesson contents with quizzes
@@ -162,11 +162,15 @@ class LessonsController extends Controller
 
         $lesson = $lesson->toArray();
         $lesson['contents'] = $contents;
+        
+    
         unset($lesson['quizzes']);
         unset($lesson['lesson_contents']);
         if ($request->expectsJson()) {
             return response()->json(['message' => __("controller.success.get", ['data' => trans_choice("data.lessons", 1)]), 'data' => $lesson]);
         }
+        $lesson['content'] = $contents[min($page-1, 0)];
+        
         return view('pages.lessons.show', compact('lesson'));
     }
 

@@ -148,9 +148,9 @@ class CoursesController extends Controller
     public function show(Request $request, Courses $course)
     {
         $data = $course->load(['author', 'categories', 'lessons'])->loadCount(['lessons']);
-        $data->sectioned();
         $data = $data->toArray();
         unset($data['lessons']);
+        
         if ($request->expectsJson()) {
             return response()->json(['message' => __("controller.success.get", ['data' => trans_choice("data.courses", 1)]), 'data' => $data]);
         }

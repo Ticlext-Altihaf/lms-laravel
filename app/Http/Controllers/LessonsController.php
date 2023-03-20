@@ -147,7 +147,8 @@ class LessonsController extends Controller
         $lesson = $lesson->load('course', 'course.lessons', 'quizzes', 'chat_room', 'quizzes.choices', 'lessonContents')->loadCount('quizzes', 'lessonContents');
         //merge lesson contents with quizzes
         $contents = array();
-        $lesson->course->sectioned();
+        
+        
         foreach ($lesson->quizzes as $quiz) {
             $qa = $quiz->toArray();
             $contents[] = $qa;
@@ -170,9 +171,25 @@ class LessonsController extends Controller
         if ($request->expectsJson()) {
             return response()->json(['message' => __("controller.success.get", ['data' => trans_choice("data.lessons", 1)]), 'data' => $lesson]);
         }
-        $lesson['content'] = $contents[min($page-1, 0)];
         
-        return view('pages.lessons.show', compact('lesson'));
+        if(count($contents) != 0){
+          $lesson['content'] = $contents[min($page-1, 0)];
+        }else{
+            //redirect
+            return redirect()->back();
+        }
+        $lesson['content'] = $lesson['content'];
+        $lesson['pagination'] = array(
+            "next" => array(
+                "name" => "",
+                "url" => ""
+            ),
+            "previous" =>  array(
+                "name" => "",
+                "url" => ""
+            ),
+        );
+        return view('pages.lessons.show')->with('data', $lesson);
     }
 
     /**

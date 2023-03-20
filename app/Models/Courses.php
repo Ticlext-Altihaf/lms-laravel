@@ -27,7 +27,7 @@ class Courses extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'sections'
+        'sections',
     ];
 
     /**
@@ -37,7 +37,7 @@ class Courses extends Model
      */
     protected $casts = [
     ];
-    protected $appends = ['category', 'image_url'];
+    protected $appends = ['category', 'image_url', 'lessons_sectioned'];
 
     public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -56,7 +56,12 @@ class Courses extends Model
             return $category;
         return null;
     }
-
+    public function getLessonsSectionedAttribute()
+    {
+        if (isset($this->lessons))
+            return Courses::Section($this);
+        return null;
+    }
     public function lessons(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Lessons::class, 'course_id');
@@ -72,6 +77,7 @@ class Courses extends Model
         //fully qualified url
         return Storage::disk('public')->url($this->image);
     }
+    
     public static function Section($data)
     {
         $sections = array();
@@ -86,13 +92,8 @@ class Courses extends Model
             }
             array_push($lessons_sectioned[$lesson->section], $lesson->toArray());
         }
-        $data->sections = $sections;
-        $data->lessons_sectioned = $lessons_sectioned;
-        return $data;
+        return $lessons_sectioned;
     }
 
-    public function sectioned(){
-        Courses::Section($this);
-        return $this;
-    }
+
 }

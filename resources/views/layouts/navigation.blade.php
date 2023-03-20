@@ -404,7 +404,7 @@
     <div class="container-fluid">
 
         <!-- Brand -->
-        <a class="navbar-brand me-0" href="index.html">
+        <a class="navbar-brand me-0" href="{{url('/')}}">
             <img src="{{asset('assets')}}/img/brand.svg" class="navbar-brand-img" alt="...">
         </a>
 

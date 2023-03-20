@@ -68,7 +68,7 @@ class CoursesController extends Controller
         if (!$request->input('search')) {
             $data['params']['search'] = '';
         }
-        return view('courses.index', compact('data'));
+        return view('pages.courses.index', compact('data'));
     }
 
     /**
@@ -81,7 +81,7 @@ class CoursesController extends Controller
         if($request->expectsJson()) {
             return response()->json(['message' => __("controller.error.not_found")], 404);
         }
-        return view('courses.create');
+        return view('pages.courses.create');
     }
 
     /**
@@ -168,7 +168,7 @@ class CoursesController extends Controller
         if ($request->expectsJson()) {
             return response()->json(['message' => __("controller.success.get", ['data' => trans_choice("data.courses", 1)]), 'data' => $data]);
         }
-        return view("courses.show", compact('data'));
+        return view("pages.courses.show", compact('data'));
     }
 
     /**
@@ -182,7 +182,7 @@ class CoursesController extends Controller
         if($request->expectsJson()) {
             return response()->json(['message' => __("controller.error.not_found")], 404);
         }
-        return view('courses.edit', compact('data'));
+        return view('pages.courses.edit', compact('data'));
     }
 
     /**

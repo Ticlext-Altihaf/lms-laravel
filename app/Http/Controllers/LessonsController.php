@@ -56,7 +56,7 @@ class LessonsController extends Controller
         if($request->expectsJson()) {
             return response()->json(['message' => __("controller.error.not_found")], 404);
         }
-        return view('lessons.create');
+        return view('pages.lessons.create');
     }
 
     /**
@@ -167,7 +167,7 @@ class LessonsController extends Controller
         if ($request->expectsJson()) {
             return response()->json(['message' => __("controller.success.get", ['data' => trans_choice("data.lessons", 1)]), 'data' => $lesson]);
         }
-        return view('lessons.show', compact('lessons'));
+        return view('pages.lessons.show', compact('lesson'));
     }
 
     /**

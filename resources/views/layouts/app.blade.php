@@ -35,8 +35,11 @@
 
 </head>
 <body>
-
-@include('layouts.navigation')
+@sectionMissing('navigation')
+    @include('layouts.navigation')
+@else
+    @yield('navigation')
+@endif
 
 
 <!-- Page Content -->

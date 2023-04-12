@@ -142,13 +142,20 @@ class LessonsController extends Controller
      * @param \App\Models\Lessons $lessons
      * @return \Illuminate\Http\Response
      */
-    public function show(Lessons $lesson, Request $request, $page = 1)
+    public function show(Lessons $lesson, Request $request)
     {
+        $page = 1;
+        if($request->get('page')) {
+            $page = $request->get('page');
+            //to int
+            $page = (int) $page;
+        }
+        $page = max($page, 1);
         $lesson = $lesson->load('course', 'course.lessons', 'quizzes', 'chat_room', 'quizzes.choices', 'lessonContents')->loadCount('quizzes', 'lessonContents');
         //merge lesson contents with quizzes
         $contents = array();
-        
-        
+
+
         foreach ($lesson->quizzes as $quiz) {
             $qa = $quiz->toArray();
             $contents[] = $qa;
@@ -164,31 +171,45 @@ class LessonsController extends Controller
 
         $lesson = $lesson->toArray();
         $lesson['contents'] = $contents;
-        
-    
+
+
         unset($lesson['quizzes']);
         unset($lesson['lesson_contents']);
         if ($request->expectsJson()) {
             return response()->json(['message' => __("controller.success.get", ['data' => trans_choice("data.lessons", 1)]), 'data' => $lesson]);
         }
-        
-        if(count($contents) != 0){
-          $lesson['content'] = $contents[min($page-1, 0)];
+
+        if(count($contents) > $page-1){
+          $lesson['content'] = $contents[$page-1];
         }else{
             //redirect
             return redirect()->back();
         }
         $lesson['content'] = $lesson['content'];
         $lesson['pagination'] = array(
-            "next" => array(
-                "name" => "",
-                "url" => ""
-            ),
-            "previous" =>  array(
-                "name" => "",
-                "url" => ""
-            ),
+            "next" => null,
+            "previous"=> null,
         );
+        if($page < count($contents)){
+            $lesson['pagination']['next'] = array(
+                "page" => $page+1,
+                "url" => route('lessons.show', ['lesson' => $lesson['id'], 'page' => $page+1]),
+                "label" => $contents[$page]['name']
+            );
+        }else{
+            $lesson['pagination']['next'] = array(
+                "page" => $page+1,
+                "url" => route('lessons.show', ['lesson' => $lesson['course']['lessons'][$lesson['order_no']]['id']]),
+                "label" => $lesson['course']['lessons'][$lesson['order_no']]['name']
+            );
+        }
+        if($page > 1){
+            $lesson['pagination']['previous'] = array(
+                "page" => $page-1,
+                "url" => route('lessons.show', ['lesson' => $lesson['id'], 'page' => $page-1]),
+                "label" => $contents[$page-2]['name']
+            );
+        }
         return view('pages.lessons.show')->with('data', $lesson);
     }
 

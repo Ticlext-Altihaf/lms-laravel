@@ -20,35 +20,11 @@
                 <a href="{{url('/courses') . '/'. $data['course']['id']}}" class="btn btn-sm btn-primary ms-md-6 px-6 mb-3 mb-md-0 flex-shrink-0">Back to Course</a>
             </div>
         </div>
+
     </header>
 @endsection
 @section('content')
-@component('components.breadcrumbs')
-        <li class="breadcrumb-item">
-            <a class="text-gray-800" href="{{url('/')}}">
-                Home
-            </a>
-        </li>
-        <li class="breadcrumb-item">
-            <a class="text-gray-800" href="{{url('/courses')}}">
-                Courses List
-            </a>
-        </li>
-        <li class="breadcrumb-item">
-            <a class="text-gray-800" href='{{url('/courses') . '/'. $data['course']['id']}}'>
-                {{$data['course']['name']}}
-            </a>
-        </li>
-        <li class="breadcrumb-item">
-            <a class="text-gray-800">
-                {{$data['section']}}
-            </a>
-        </li>
-        <li class="breadcrumb-item text-gray-800 active" aria-current="page">
-            {{ $data['name'] }}
-        </li>
 
-@endcomponent
 
 <!-- COURSE
     ================================================== -->
@@ -90,7 +66,7 @@
                 </div>
 
                 <div id="accordionCurriculum" class="sidebar-collapse-scroll">
-        
+
                 @foreach($data['course']['lessons_sectioned'] as $section => $lessons)
                                 <?php
                                 $section_id = str_replace(' ', '', $section);
@@ -125,7 +101,7 @@
                             <div id="Curriculumcollapse{{$section_id}}" class="collapse show" aria-labelledby="curriculumheading{{$section_id}}"
                                  data-parent="#accordionCurriculum">
                                 @foreach($lessons as $lesson)
-                                <div class="border-top px-5 py-4 min-height-70 d-md-flex align-items-center bg-gray-100">
+                                <div class="border-top px-5 py-4 min-height-70 d-md-flex align-items-center {{$data['id'] == $lesson['id'] ? "bg-gray-200" : "bg-gray-600"}}">
                                     <div class="d-flex align-items-center me-auto mb-4 mb-md-0">
                                         <div class="text-secondary d-flex">
                                             <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
@@ -158,14 +134,40 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="container">
+            @component('components.breadcrumbs')
+                <li class="breadcrumb-item">
+                    <a class="text-gray-800" href="{{url('/')}}">
+                        Home
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a class="text-gray-800" href="{{url('/courses')}}">
+                        Courses List
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a class="text-gray-800" href='{{url('/courses') . '/'. $data['course']['id']}}'>
+                        {{$data['course']['name']}}
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a class="text-gray-800">
+                        {{$data['section']}}
+                    </a>
+                </li>
+                <li class="breadcrumb-item text-gray-800 active" aria-current="page">
+                    {{ $data['name'] }}
+                </li>
+
+            @endcomponent
             <div class="row mb-11">
                 <div class="col-lg-11 col-wd-12 ms-lg-auto pt-11 pt-lg-8">
                     <h2 class="font-size-xl mb-6">
-                        {{$data['name']}}
+                        {{$data['content']['name']}}
                     </h2>
-                    
+
                      @if($data['content']['type'] == 'youtube_video')
                     <a href="https://www.youtube.com/watch?v={{$data['content']['video_id']}}" class="d-block sk-thumbnail rounded mb-8" data-fancybox="">
                         <div class="h-90p w-90p rounded-circle bg-white size-30-all d-inline-flex align-items-center justify-content-center position-absolute center z-index-1">
@@ -177,23 +179,43 @@
                         </div>
                         <img class="rounded shadow-light-lg" src="https://img.youtube.com/vi/{{$data['content']['video_id']}}/0.jpg" alt="...">
                     </a>
-                                    
+
 
                      @elseif($data['content']['type'] == 'text')
-                     
+
                       <p>{{$data['content']['text']}}</p>
+                     @elseif($data['content']['type'] == 'quiz')
+                        <p>{{$data['content']['text']}}</p>
+                         @if($data['content']['is_fill_in_the_blank'])
+                             <input type="text" class="form-control" placeholder="Enter your answer">
+                        @elseif($data['content']['is_true_false'])
+                             <select class="form-select">
+                                 <option value="true">True</option>
+                                 <option value="false">False</option>
+                             </select>
+                        @elseif($data['content']['is_multiple_choice'])
+                             <select class="form-select">
+                                 @foreach($data['content']['choices'] as $option)
+                                     <option value="{{$option['id']}}">{{$option['text']}}</option>
+                                 @endforeach
+                             </select>
+                        @endif
                      @endif
-               
-    
+
+
                     <div class="d-md-flex align-items-center justify-content-between mb-8">
-                        <a href="#" class="btn btn-teal d-flex align-items-center text-white mb-5 mb-md-0 btn-block mw-md-280p justify-content-center">
+                        @if($data['pagination']['previous'] != null)
+                        <a href="{{$data['pagination']['previous']['url']}}" class="btn btn-teal d-flex align-items-center text-white mb-5 mb-md-0 btn-block mw-md-280p justify-content-center">
                             <i class="fas fa-arrow-left font-size-xs"></i>
-                            <span class="ms-3">Introduction</span>
+                            <span class="ms-3">{{$data['pagination']['previous']['label']}}</span>
                         </a>
-                        <a href="#" class="btn btn-teal d-flex align-items-center text-white btn-block mw-md-280p justify-content-center mt-0">
-                            <span class="me-3">Structure of the course</span>
+                        @endif
+                        @if($data['pagination']['next'] != null)
+                        <a href="{{$data['pagination']['next']['url']}}" class="btn btn-teal d-flex align-items-center text-white btn-block mw-md-280p justify-content-center mt-0">
+                            <span class="me-3">{{$data['pagination']['next']['label']}}</span>
                             <i class="fas fa-arrow-right font-size-xs"></i>
                         </a>
+                        @endif
                     </div>
 
                     <h3 class="mb-6">Comment</h3>

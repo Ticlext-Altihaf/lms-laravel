@@ -10,7 +10,7 @@ Route::resource('quizzes', \App\Http\Controllers\QuizzesController::class);
 Route::resource('categories', \App\Http\Controllers\CategoriesController::class);
 Route::resource('contents', \App\Http\Controllers\ContentsController::class);
 Route::resource('users', \App\Http\Controllers\UsersController::class);
-
+Route::get('users.profile', [\App\Http\Controllers\UsersController::class, 'profile'])->name('users.profile');
 Route::get('/locale/{locale}', function (string $locale, \Illuminate\Http\Request $request) {
     $locales = ['en', 'id'];
     if (!in_array($locale, $locales)) {

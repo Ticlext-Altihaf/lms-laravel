@@ -1390,8 +1390,8 @@
 
             <li class="nav-item border-0 px-0">
                 <!-- Button trigger account modal -->
-                <a href="#" class="nav-link d-flex px-3 px-md-4 text-secondary icon-xs" data-bs-toggle="modal"
-                   data-bs-target="#accountModal">
+                <a href="{{route('profile.edit')}}"
+                   class="nav-link d-flex px-3 px-md-4 text-secondary icon-xs" data-bs-target="#accountModal">
                     <!-- Icon -->
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path

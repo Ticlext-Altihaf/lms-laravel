@@ -5,7 +5,7 @@
 ================================================== -->
     <header class="py-8 py-md-11" style="background-image: none;">
         <div class="container text-center py-xl-2">
-            <h1 class="display-4 fw-semi-bold mb-0">Courses Grid 01</h1>
+            <h1 class="display-4 fw-semi-bold mb-0">Courses</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-scroll justify-content-center">
                     <li class="breadcrumb-item">

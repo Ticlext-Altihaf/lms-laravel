@@ -190,19 +190,25 @@ class LessonsController extends Controller
             "next" => null,
             "previous"=> null,
         );
-        if($page < count($contents)){
+        if($page < count($contents)){//still have content
+            //show the next content
             $lesson['pagination']['next'] = array(
                 "page" => $page+1,
                 "url" => route('lessons.show', ['lesson' => $lesson['id'], 'page' => $page+1]),
                 "label" => $contents[$page]['name']
             );
         }else{
-            $lesson['pagination']['next'] = array(
-                "page" => $page+1,
-                "url" => route('lessons.show', ['lesson' => $lesson['course']['lessons'][$lesson['order_no']]['id']]),
-                "label" => $lesson['course']['lessons'][$lesson['order_no']]['name']
-            );
+            //show the next lesson if any
+            $next_lesson = Lessons::where('course_id', $lesson['course_id'])->where('order_no', '>', $lesson['order_no'])->orderBy('order_no', 'asc')->first();
+            if($next_lesson){
+                $lesson['pagination']['next'] = array(
+                    "page" => 1,
+                    "url" => route('lessons.show', ['lesson' => $next_lesson['id'], 'page' => 1]),
+                    "label" => $next_lesson['name']
+                );
+            }
         }
+        //show the previous content if there is any
         if($page > 1){
             $lesson['pagination']['previous'] = array(
                 "page" => $page-1,

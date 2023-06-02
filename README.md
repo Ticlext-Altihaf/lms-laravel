@@ -1,5 +1,16 @@
 # LMS
 
+## Setup
+```bash
+composer install
+#config .env
+php artisan key:generate
+php artisan migrate
+php artisan db:seed
+php artisan storage:link
+npm run install
+```
+
 ## API
 
 ```php
